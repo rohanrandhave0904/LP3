@@ -1,0 +1,66 @@
+import java.util.*;
+
+class Item{
+    int value,weight;
+
+    Item(int value,int weight){
+        this.value=value;
+        this.weight=weight;
+    }
+
+}
+
+public class fractional {
+    public static double getMaxValue(Item[] items,int W){
+        Arrays.sort(items, new Comparator<Item>() {
+            @Override
+            public int compare(Item i1, Item i2) {
+                double r1= (double) i1.value/i1.weight;
+                double r2=(double) i2.value/i2.weight;
+                return Double.compare(r2,r1);
+            }
+        });
+        double maxValue=0;
+
+        for(Item item:items){
+            if(W==0) break;
+
+            if(item.weight<W){
+                maxValue+=item.value;
+                W-=item.weight;
+            }
+            else{
+                maxValue+=item.value*((double)W/ item.weight);
+                W=0;
+            }
+        }
+        return maxValue;
+    }
+
+    public static void main(String[] args){
+        Scanner scanner=new Scanner(System.in);
+        System.out.print("ENTER THE NUMBER OF ITEMS--");
+        int n=scanner.nextInt();
+
+        Item[] items=new Item[n];
+
+        for(int i=0;i<n;i++){
+            System.out.println("Enter Value And Weight "+(i+1)+" :");
+            int value=scanner.nextInt();
+            int weight=scanner.nextInt();
+            items[i]=new Item(value,weight);
+        }
+
+        System.out.println("ENTER THE MAXIMUM WIGHT OF KNAPSACK-");
+        int W=scanner.nextInt();
+
+        double maxValue=getMaxValue(items,W);
+
+        System.out.println("MAXIMUM CAPACITY--"+maxValue);
+        scanner.close();
+
+
+
+    }
+
+}

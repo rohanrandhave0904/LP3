@@ -1,0 +1,70 @@
+import pandas as pd
+
+df=pd.read_csv('./emails.csv')
+
+df.shape 
+
+df.head()
+
+#input data 
+x=df.drop(['Email No.','Prediction'],axis=1)
+
+#output data
+y=df['Prediction']
+
+
+x.shape
+
+
+import seaborn as sns
+sns.countplot(x=y)
+
+y.value_counts()
+
+#Feature Scaling 
+from sklearn.preprocessing import MinMaxScaler
+scaler=MinMaxScaler()
+
+x_scaled=scaler.fit_transform(x)
+
+x_scaled
+
+#cross-validation
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test=train_test_split(x_scaled,y,random_state=0,test_size=0.25)
+
+x_scaled.shape
+
+x_train.shape
+
+x_test.shape
+
+#KNN
+from sklearn.neighbors import KNeighborsClassifier
+
+knn= KNeighborsClassifier(n_neighbors=5)
+
+knn.fit(x_train,y_train)
+
+y_pred=knn.predict(x_test)
+
+from sklearn.metrics import ConfusionMatrixDisplay,accuracy_score,classification_report
+
+ConfusionMatrixDisplay.from_predictions(y_test,y_pred)
+
+accuracy_score(y_test,y_pred)
+
+print(classification_report(y_test,y_pred))
+
+
+#Support Vector Machine
+from sklearn.svm import SVC
+svm=SVC(kernel='linear')
+
+svm.fit(x_train,y_train)
+
+y_pred_svm=svm.predict(x_test)
+
+accuracy_score(y_test,y_pred_svm)
+
+print(classification_report(y_test,y_pred_svm))

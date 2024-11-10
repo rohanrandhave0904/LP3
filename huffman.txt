@@ -1,0 +1,61 @@
+import java.util.*;
+
+class Node{
+    char ch;
+    int freq;
+    Node left,right;
+
+    Node(char ch,int freq){
+        this.ch=ch;
+        this.freq=freq;
+    }
+    Node(int freq,Node left,Node right){
+        this.freq=freq;
+        this.left=left;
+        this.right=right;
+    }
+
+}
+public class huffcoding {
+    public static void generatecodes(Node root,String code,Map<Character,String> huffmancodes){
+        if(root==null) return;
+
+        if(root.left==null && root.right==null){
+            huffmancodes.put(root.ch,code);
+        }
+        generatecodes(root.left,code+"0",huffmancodes);
+        generatecodes(root.right,code+"1",huffmancodes);
+    }
+    public static void main(String[] args){
+        Scanner scanner=new Scanner(System.in);
+        System.out.print("Enter the number of Character-");
+        int n=scanner.nextInt();
+
+        char[] chars=new char[n];
+        int[] freqs=new int[n];
+
+        for(int i=0;i<n;i++){
+            System.out.print("CHARCTER-");
+            chars[i]=scanner.next().charAt(0);
+            System.out.print("FREQUENCY-");
+            freqs[i]=scanner.nextInt();
+        }
+        PriorityQueue<Node> pq=new PriorityQueue<>((a,b)->a.freq-b.freq);
+
+        for(int i=0;i<n;i++){
+            pq.add(new Node(chars[i],freqs[i]));
+        }
+        while(pq.size()>1){
+            Node left=pq.poll();
+            Node right=pq.poll();
+            int combined=left.freq+right.freq;
+            pq.add(new Node(combined,left,right));
+        }
+        Node root=pq.poll();
+        Map<Character,String> huffmancodes=new HashMap<>();
+        generatecodes(root," ",huffmancodes);
+        for(Map.Entry<Character,String> entry:huffmancodes.entrySet()){
+            System.out.println(entry.getKey()+":"+entry.getValue());
+        }
+    }
+}
